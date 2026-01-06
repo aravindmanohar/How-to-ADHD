@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ADHD Hacks Explorer – 117 Hacks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #111827;
+    }
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    header {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: #f9fafb;
+      padding: 24px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(15,23,42,0.3);
+      margin-bottom: 20px;
+    }
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 1.9rem;
+    }
+    header p {
+      margin: 0;
+      font-size: 0.95rem;
+      opacity: 0.95;
+    }
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .stat-card {
+      flex: 1 1 120px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(15,23,42,0.25);
+      text-align: center;
+    }
+    .stat-card .num {
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: block;
+    }
+    .stat-card .label {
+      font-size: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .controls-panel {
+      margin-top: 14px;
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 12px 14px;
+      box-shadow: 0 4px 16px rgba(15,23,42,0.15);
+    }
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(190px,1fr));
+      gap: 10px;
+      align-items: flex-end;
+    }
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .control-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #4b5563;
+    }
+    .control-group select,
+    .control-group input {
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .control-group select:focus,
+    .control-group input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 1px rgba(79,70,229,0.3);
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .pill {
+      font-size: 0.75rem;
+      border-radius: 9999px;
+      padding: 3px 9px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      cursor: pointer;
+    }
+    .pill.active {
+      background: #4f46e5;
+      color: #f9fafb;
+      border-color: #4338ca;
+    }
+
+    .summary-bar {
+      margin: 14px 2px;
+      font-size: 0.82rem;
+      color: #4b5563;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .summary-bar strong {
+      color: #111827;
+    }
+
+    .categories-container {
+      margin-top: 8px;
+      margin-bottom: 30px;
+    }
+    details.category {
+      background: #f9fafb;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+    details[open].category {
+      box-shadow: 0 6px 18px rgba(15,23,42,0.15);
+    }
+    summary.category-header {
+      list-style: none;
+      cursor: pointer;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #eef2ff;
+    }
+    summary::-webkit-details-marker { display: none; }
+    .category-title-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cat-icon {
+      font-size: 1.2rem;
+    }
+    .cat-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #111827;
+    }
+    .cat-count {
+      font-size: 0.75rem;
+      color: #4b5563;
+    }
+    .cat-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+    .cat-toggle {
+      cursor: pointer;
+      color: #4f46e5;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .cat-toggle:hover {
+      background-color: #e0e7ff;
+    }
+
+    .hacks-grid {
+      padding: 10px 12px 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+      gap: 10px;
+    }
+    .hack-card {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 10px 10px;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.82rem;
+    }
+    .hack-name {
+      font-weight: 600;
+      color: #4f46e5;
+      font-size: 0.9rem;
+    }
+    .hack-issue {
+      font-style: italic;
+      color: #6b7280;
+    }
+    .hack-description {
+      color: #374151;
+      margin-top: 2px;
+    }
+    .hack-meta {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      border-top: 1px solid #f3f4f6;
+      padding-top: 4px;
+    }
+    .badge {
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+    .badge.easy {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .badge.medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .badge.hard {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .time-badge {
+      color: #4f46e5;
+      font-weight: 600;
+    }
+
+    footer {
+      padding: 16px 4px 24px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #e5e7eb;
+    }
+
+    @media (max-width: 640px) {
+      header h1 { font-size: 1.4rem; }
+      .hack-card { font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>🧠 ADHD Hacks Explorer</h1>
+    <p>Browse, filter, and sort 117 ADHD-friendly hacks across 10 categories. Built from the consolidated markdown guide.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="num" id="stat-total">117</span>
+        <span class="label">Total Hacks</span>
+      </div>
+      <div class="stat-card">
+        <span class="num">10</span>
+        <span class="label">Categories</span>
+      </div>
+      <div class="stat-card">
+        <span class="num">76</span>
+        <span class="label">Easy Difficulty</span>
+      </div>
+      <div class="stat-card">
+        <span class="num">40</span>
+        <span class="label">Immediate Start</span>
+      </div>
+    </div>
+    <div class="controls-panel">
+      <div class="controls-grid">
+        <div class="control-group">
+          <label for="searchInput">Search (name, issue, description)</label>
+          <input type="text" id="searchInput" placeholder="e.g. calendar, laundry, procrastination">
+        </div>
+        <div class="control-group">
+          <label for="categoryFilter">Filter by Category</label>
+          <select id="categoryFilter">
+            <option value="all">All categories</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="issueFilter">Filter by Issue</label>
+          <select id="issueFilter">
+            <option value="all">All issues</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="difficultyFilter">Filter by Difficulty</label>
+          <select id="difficultyFilter">
+            <option value="all">All difficulties</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="sortSelect">Sort Hacks By</label>
+          <select id="sortSelect">
+            <option value="none">Default (keep category order)</option>
+            <option value="issue-asc">Issue (A→Z)</option>
+            <option value="issue-desc">Issue (Z→A)</option>
+            <option value="difficulty">Difficulty (Easy→Hard)</option>
+            <option value="time">Time to Implement</option>
+            <option value="name">Hack Name (A→Z)</option>
+          </select>
+        </div>
+      </div>
+      <div class="pill-row">
+        <button class="pill active" id="pill-expand-all">Expand all</button>
+        <button class="pill" id="pill-collapse-all">Collapse all</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="summary-bar" id="summaryBar">
+    Showing <strong>117</strong> hacks across <strong>10</strong> categories.
+  </div>
+
+  <div class="categories-container" id="categoriesContainer">
+    <!-- Categories rendered by JS -->
+  </div>
+
+  <footer>
+    <div>Compiled from your consolidated ADHD hacks markdown guide (117 hacks, 10 categories).</div>
+    <div>Single-page client-only application – save as HTML and open in any browser.</div>
+  </footer>
+</div>
+
+<script>
+  const hacks = [
+    // Task Management & Productivity (10)
+    {category: "Task Management & Productivity", issue: "Working Memory", name: "Brain Dump System", difficulty: "Easy", time: "Immediate", description: "Write down every thought immediately into Discord, Notion, Google Keep, or Saner to capture ideas before they vanish. This offloads your working memory to an external system."},
+    {category: "Task Management & Productivity", issue: "Overwhelm", name: "Reverse To-Do List", difficulty: "Easy", time: "Immediate", description: "Track accomplishments instead of incomplete tasks for motivation and progress visibility. Builds a sense of achievement and combats overwhelm."},
+    {category: "Task Management & Productivity", issue: "Task Initiation", name: "Task Breakdown (Comically Small)", difficulty: "Easy", time: "Immediate", description: "Break tasks into tiny steps like \"open email\" instead of \"clean room\" to lower friction and make getting started easier."},
+    {category: "Task Management & Productivity", issue: "Forgetfulness", name: "Calendar-Based Tasks", difficulty: "Medium", time: "1 day", description: "Put tasks directly on calendar for pop-up reminders instead of using a to-do list. Calendar notifications are more effective than to-do apps."},
+    {category: "Task Management & Productivity", issue: "Out of Sight, Out of Mind", name: "Home Screen Widget", difficulty: "Easy", time: "Immediate", description: "Add to-do list widget to phone home screen for constant visibility and automatic reminders."},
+    {category: "Task Management & Productivity", issue: "Time Awareness", name: "Time Tracking (Toggl)", difficulty: "Medium", time: "1 week", description: "Track time on tasks to build awareness of time passing and identify distraction patterns. Builds awareness of your actual time perception."},
+    {category: "Task Management & Productivity", issue: "Decision Fatigue", name: "One-Thing Theory", difficulty: "Easy", time: "Immediate", description: "On difficult days, focus on just one priority instead of a full list for guaranteed success."},
+    {category: "Task Management & Productivity", issue: "Prioritization", name: "Task Prioritization (A/B/C)", difficulty: "Easy", time: "1 day", description: "Assign priority levels to tasks: A (critical), B (important), C (nice-to-have). Simplifies decision-making."},
+    {category: "Task Management & Productivity", issue: "Phone Distraction", name: "Planner in Bed", difficulty: "Easy", time: "Immediate", description: "Keep planner/schedule by your bed to minimize phone scrolling on wake-up and start your day intentionally."},
+    {category: "Task Management & Productivity", issue: "Decision Fatigue", name: "Pre-Plan Night Before", difficulty: "Medium", time: "1 day", description: "Plan and prepare all items/clothes for tomorrow evening to reduce morning decisions and mental load."},
+
+    // Finding & Organizing Items (10)
+    {category: "Finding & Organizing Items", issue: "Lost Items", name: "Bluetooth GPS Trackers (Tile/AirTag)", difficulty: "Medium", time: "1 day", description: "Use trackers on keys, wallet, phone, car, bike for quick location finding. Game-changing for chronic item losers."},
+    {category: "Finding & Organizing Items", issue: "Lost Keys", name: "Door Organizer System", difficulty: "Easy", time: "Immediate", description: "Use bowl or organizer by front door for keys immediately upon arriving home. Creates automatic habit spot."},
+    {category: "Finding & Organizing Items", issue: "Lost Items", name: "Buy Multiple Duplicates", difficulty: "Medium", time: "1 week", description: "Keep multiple chargers, scissors, pens, lip balms around house/work so you always have one nearby. Reduces hunting time."},
+    {category: "Finding & Organizing Items", issue: "Memory Aid", name: "Open Storage System", difficulty: "Medium", time: "2 weeks", description: "Use open shelves and visible storage instead of drawers for visual reminders. Out of sight items are forgotten."},
+    {category: "Finding & Organizing Items", issue: "Forgotten Items", name: "Essential Kit Bag", difficulty: "Easy", time: "1 day", description: "Pre-pack bag with keys, charger, documents, essentials always ready to grab. Reduces decision-making."},
+    {category: "Finding & Organizing Items", issue: "Lockouts", name: "Spare House Keys", difficulty: "Easy", time: "1 day", description: "Keep spare key in car and outside house to avoid lockouts and lost key stress."},
+    {category: "Finding & Organizing Items", issue: "Memory Aid", name: "Ring Switching Method", difficulty: "Easy", time: "Immediate", description: "Move ring to different finger when remembering task to remind yourself later. Physical memory aid."},
+    {category: "Finding & Organizing Items", issue: "Finding Phone", name: "Bright Phone Cover", difficulty: "Easy", time: "1 day", description: "Use bright red or distinctive phone cover to find it quickly when lost or misplaced."},
+    {category: "Finding & Organizing Items", issue: "Laundry Chaos", name: "One Type of Sock", difficulty: "Easy", time: "1 week", description: "Buy only one type/color of sock to eliminate matching chaos and simplify laundry."},
+    {category: "Finding & Organizing Items", issue: "Organization", name: "Fixed Locations & Labels", difficulty: "Easy", time: "2-3 days", description: "Create designated 'homes' for items with label maker to make it official and memorable."},
+
+    // Household Chores & Cleaning (14)
+    {category: "Household Chores & Cleaning", issue: "Boring Tasks", name: "Podcast/Audiobook Strategy", difficulty: "Easy", time: "Immediate", description: "Listen to engaging podcasts/audiobooks while doing chores for motivation. Game-changing for many ADHD folks."},
+    {category: "Household Chores & Cleaning", issue: "Motivation", name: "High-Tempo Cleaning Playlist", difficulty: "Easy", time: "1 day", description: "Create or find high-energy music playlist to keep body moving during chores. Physical movement + music = motivation."},
+    {category: "Household Chores & Cleaning", issue: "Forgotten Tasks", name: "Light Reminder System", difficulty: "Easy", time: "Immediate", description: "Leave lights on in rooms with unfinished tasks as visual reminders. Surprisingly effective."},
+    {category: "Household Chores & Cleaning", issue: "Automatic Reminders", name: "Motion-Sensor LED Lights", difficulty: "Medium", time: "1 week", description: "Install motion-sensor bulbs that auto turn-off after 1 minute. Eliminates the \"forgot to turn off light\" worry."},
+    {category: "Household Chores & Cleaning", issue: "Habit Formation", name: "Habit-Chain to Bedtime", difficulty: "Easy", time: "Ongoing", description: "Do chores before bed since you have to go to bed anyway (anchored habit). Uses existing routine."},
+    {category: "Household Chores & Cleaning", issue: "Task Initiation", name: "Wear Shoes/Crocs for Chores", difficulty: "Easy", time: "Immediate", description: "Put on shoes while doing chores to signal 'task mode' to your brain. Simple mental trigger."},
+    {category: "Household Chores & Cleaning", issue: "Task Completion", name: "Brush Teeth in Shower", difficulty: "Easy", time: "Immediate", description: "Combine boring tasks into one to reduce mental load and increase efficiency."},
+    {category: "Household Chores & Cleaning", issue: "Task Persistence", name: "Embrace Chaos While Cleaning", difficulty: "Easy", time: "Immediate", description: "Let yourself get distracted between tasks (dishes→trash→back to dishes) without guilt. Flow-based cleaning."},
+    {category: "Household Chores & Cleaning", issue: "Task Completion", name: "Task Bracelet System", difficulty: "Medium", time: "1 week", description: "Make bracelet for each task; move to 'finished' bowl when done for tangible dopamine hit."},
+    {category: "Household Chores & Cleaning", issue: "Cleaning Overwhelm", name: "5-Minute Speed Clean", difficulty: "Easy", time: "Immediate", description: "Set 5-minute timer for quick cleaning of one room daily to maintain baseline cleanliness."},
+    {category: "Household Chores & Cleaning", issue: "Laundry Management", name: "Spare Tub for Clean Clothes", difficulty: "Easy", time: "1 day", description: "Use spare bathtub/large basket to collect clean laundry instead of piles on chair."},
+    {category: "Household Chores & Cleaning", issue: "Work Clothes System", name: "5-Outfit Laundry Basket", difficulty: "Easy", time: "1 day", description: "Keep exactly 5 complete outfit sets in separate basket to know when laundry is needed."},
+    {category: "Household Chores & Cleaning", issue: "Cleaning Kits", name: "Pre-Make Task Kits", difficulty: "Medium", time: "1 week", description: "Create cleaning kits, package-mailing kits, etc. to reduce friction starting tasks. Preparation beats willpower."},
+    {category: "Household Chores & Cleaning", issue: "Laundry Anxiety", name: "Laundry Basket in Living Room", difficulty: "Easy", time: "Immediate", description: "Keep basket in common areas for clothes to prevent floor piles and reduce visual chaos."},
+
+    // Morning & Sleep Routines (7)
+    {category: "Morning & Sleep Routines", issue: "Getting Out of Bed", name: "Alarm Across the Room", difficulty: "Easy", time: "Immediate", description: "Place phone on opposite side of room so you must get up to turn off alarm. Physical forcing function."},
+    {category: "Morning & Sleep Routines", issue: "Waking Up", name: "Bright Lamps on Timers", difficulty: "Medium", time: "2 days", description: "Buy 2 bright lamps with timers to turn on 5-15 min before alarm (signals daylight). Mimics sunrise."},
+    {category: "Morning & Sleep Routines", issue: "Sleep + Medication", name: "Two-Alarm Medication System", difficulty: "Medium", time: "1 day", description: "Alarm #1: take meds and sleep. Alarm #2: meds kicked in, actual wake time. Gives medication time to work."},
+    {category: "Morning & Sleep Routines", issue: "Accountability", name: "Schedule Early Commitments", difficulty: "Medium", time: "Ongoing", description: "Book meetings/classes early in morning to force yourself out of bed. External accountability."},
+    {category: "Morning & Sleep Routines", issue: "Morning Chaos", name: "Full Night-Before Prep", difficulty: "Easy", time: "1 day", description: "Prepare outfit (including socks/accessories), bag, keys, charger, laptop night before. Reduces decisions 80%."},
+    {category: "Morning & Sleep Routines", issue: "Getting Dressed", name: "Get Partially Dressed During Chores", difficulty: "Easy", time: "Immediate", description: "Start changing clothes while doing morning tasks so you can't forget finishing. Habit-chaining."},
+    {category: "Morning & Sleep Routines", issue: "Consistent Wake Time", name: "Consistent Sleep Schedule", difficulty: "Medium", time: "Ongoing", description: "Keep same wake time and lunch routine daily for circadian rhythm alignment. Rhythm helps ADHD brain."},
+
+    // Medication & Health (14)
+    {category: "Medication & Health", issue: "Forgotten Meds", name: "Medication by Food", difficulty: "Easy", time: "Immediate", description: "Place medication bottle next to eating spot so you take with meals automatically. Habit-chaining at its best."},
+    {category: "Medication & Health", issue: "Sleep + Meds", name: "Medication & Water by Bed", difficulty: "Easy", time: "Immediate", description: "Keep pillbox and water glass by bed to reduce friction taking morning meds."},
+    {category: "Medication & Health", issue: "Medication Timing", name: "Pill Bottle Flip System", difficulty: "Easy", time: "Immediate", description: "Flip bottle upside-down when taking meds; flip back at day's end for next dose reminder. Visual indicator."},
+    {category: "Medication & Health", issue: "Morning Activation", name: "Cold Brew Coffee on Nightstand", difficulty: "Easy", time: "1 day", description: "Prepare cold-brew night before and place on nightstand for post-medication caffeine hit."},
+    {category: "Medication & Health", issue: "Nutrition", name: "Meal Replacement Shakes (Huel)", difficulty: "Easy", time: "Immediate", description: "Use meal replacement shakes to ensure consistent nutrition without meal planning or cooking decisions."},
+    {category: "Medication & Health", issue: "Meal Planning", name: "Meal Delivery Service", difficulty: "Medium", time: "1 day", description: "Subscribe to HelloFresh/meal boxes to eliminate meal planning and cooking decisions."},
+    {category: "Medication & Health", issue: "Meal Planning", name: "Pre-Pack Lunch Night Before", difficulty: "Easy", time: "1 day", description: "Make lunch evening before so no morning decisions about what to eat."},
+    {category: "Medication & Health", issue: "Forgotten Lunch", name: "Put Keys on Lunch", difficulty: "Easy", time: "Immediate", description: "Place keys on top of packed lunch so you can't leave without remembering it. Forcing function."},
+    {category: "Medication & Health", issue: "Eating Habits", name: "Nutribullet for Fruit", difficulty: "Medium", time: "1 day", description: "Make fruit smoothies to increase fruit intake and address eating too fast."},
+    {category: "Medication & Health", issue: "Sleep Quality", name: "Prioritize Quality Sleep", difficulty: "Medium", time: "Ongoing", description: "Ensure 10 hours of good sleep (beats lack of sleep before exams/deadlines). Sleep>cramming."},
+    {category: "Medication & Health", issue: "Physical Activity", name: "Regular Exercise", difficulty: "Medium", time: "Ongoing", description: "Exercise (cardio especially) before focus tasks to help brain settle and improve sleep quality."},
+    {category: "Medication & Health", issue: "Hydration", name: "Keep Water/Gum on Desk", difficulty: "Easy", time: "Immediate", description: "Keep water bottle and gum nearby during work to reduce cravings and stay hydrated."},
+    {category: "Medication & Health", issue: "Sleep", name: "Extended-Wear Contact Lenses", difficulty: "Medium", time: "1 time", description: "Use extended-wear monthly contact lenses instead of daily disposables (one less daily task)."},
+    {category: "Medication & Health", issue: "Medication Reminder", name: "Ask Partner to Wake for Meds", difficulty: "Easy", time: "Ongoing", description: "Request partner wake you for medication reminder so you can fall back asleep. External accountability."},
+
+    // Work & Study (25)
+    {category: "Work & Study", issue: "Focus", name: "Spotify Jogging Playlist", difficulty: "Easy", time: "1 day", description: "Work to music at consistent BPM (jogging tempo) vs. classical or random music. Consistent rhythm aids focus."},
+    {category: "Work & Study", issue: "Time Blindness", name: "Countdown Timer on Desk", difficulty: "Easy", time: "1 day", description: "Place physical countdown timer prominently on desk to combat time blindness and create urgency."},
+    {category: "Work & Study", issue: "Accountability", name: "Body Doubling (Focusmate)", difficulty: "Medium", time: "Immediate", description: "Work alongside someone virtually (Focusmate) for accountability and motivation boost."},
+    {category: "Work & Study", issue: "Distractions", name: "Do Not Disturb Mode", difficulty: "Easy", time: "Immediate", description: "Turn on DND on phone to eliminate notification distractions during focus time."},
+    {category: "Work & Study", issue: "Phone Calls", name: "Walk & Talk for Calls", difficulty: "Easy", time: "Immediate", description: "Go for walk during phone calls to increase movement, oxygen, and mental clarity."},
+    {category: "Work & Study", issue: "Social Media Rabbit Holes", name: "App Blockers (Onesec/Freedom)", difficulty: "Medium", time: "1 day", description: "Use apps with delay before social media access to give time to reconsider scrolling."},
+    {category: "Work & Study", issue: "Focus Environment", name: "Change Work Environment", difficulty: "Easy", time: "Immediate", description: "Work from cafe/library with fewer distractions to increase productivity and reduce home distractions."},
+    {category: "Work & Study", issue: "Work-Life Balance", name: "Set Work/Relax Time Blocks", difficulty: "Easy", time: "1 day", description: "Assign specific work time and relaxation time so you don't feel guilty during breaks."},
+    {category: "Work & Study", issue: "Context Switching", name: "Block Scheduling", difficulty: "Medium", time: "1 week", description: "Group similar tasks/meetings into blocks to reduce context-switching exhaustion."},
+    {category: "Work & Study", issue: "Meeting Overload", name: "Consolidate Meeting Days", difficulty: "Hard", time: "1-2 weeks", description: "Push all meetings into one day per week to protect focus time other days."},
+    {category: "Work & Study", issue: "Task Management", name: "Consolidate All Calendars/Emails", difficulty: "Medium", time: "1-2 days", description: "Merge all calendars and messaging into one service to avoid checking multiple places."},
+    {category: "Work & Study", issue: "Waiting Mode", name: "Plan Short Tasks Between Meetings", difficulty: "Medium", time: "Daily planning", description: "Identify quick tasks from to-do list to tackle between calls/meetings (avoid paralysis)."},
+    {category: "Work & Study", issue: "Priority Setting", name: "Use Goblin Tools Task Breakdown", difficulty: "Easy", time: "Immediate", description: "Use Goblin Tools to transform big tasks like 'taxes' into smaller steps automatically."},
+    {category: "Work & Study", issue: "Time Perception", name: "Change Alarm Sounds Frequently", difficulty: "Easy", time: "Weekly", description: "Vary alarm/timer sounds to prevent habituation and maintain alert attention."},
+    {category: "Work & Study", issue: "Task Commitment", name: "Treat Timers Like Laws", difficulty: "Medium", time: "Ongoing", description: "When timer goes off, stop immediately regardless of task state (half-showered, etc.)."},
+    {category: "Work & Study", issue: "Task Initiation", name: "Start Task Visualization", difficulty: "Easy", time: "Immediate", description: "Close eyes and visualize yourself doing the task from start to finish, then just do it."},
+    {category: "Work & Study", issue: "Work Initiation", name: "Snowball Approach", difficulty: "Easy", time: "Immediate", description: "Start with easy tasks (breakfast, reading emails) to build momentum before hard task."},
+    {category: "Work & Study", issue: "Procrastination", name: "Just Start for 5 Minutes", difficulty: "Easy", time: "Immediate", description: "Commit to only starting a task for 5 minutes (usually momentum takes over)."},
+    {category: "Work & Study", issue: "Work Limit", name: "Two Initial Tasks Only", difficulty: "Easy", time: "Daily", description: "Set just 2 tasks at day start; likely to enter flow and do more after finishing those."},
+    {category: "Work & Study", issue: "Procrastination", name: "Manufactured Panic", difficulty: "Medium", time: "As needed", description: "Use self-created urgency/time pressure to overcome procrastination (set fake deadline)."},
+    {category: "Work & Study", issue: "Organization", name: "Bullet Journal System", difficulty: "Medium", time: "1 week", description: "Consolidate all to-dos and notes into one bullet journal with easy retrieval system."},
+    {category: "Work & Study", issue: "App Selection", name: "Routinely App", difficulty: "Easy", time: "1 day", description: "Use Routinely app for structured schedule without guilt for incomplete items."},
+    {category: "Work & Study", issue: "Delegation", name: "Delegate Tasks Back", difficulty: "Hard", time: "Ongoing", description: "Tell boss you're working on X/Y and ask which to deprioritize for new task Z."},
+    {category: "Work & Study", issue: "Calendar Management", name: "Put Tasks Directly on Calendar", difficulty: "Easy", time: "Immediate", description: "Pull out phone mid-conversation and immediately add to calendar when thinking of task."},
+    {category: "Work & Study", issue: "Distraction Prevention", name: "Post-it Notes on Desk", difficulty: "Easy", time: "Immediate", description: "Use physical post-it notes for immediate small tasks to keep visible."},
+
+    // Wellness & Mental Health (9)
+    {category: "Wellness & Mental Health", issue: "Rest & Recovery", name: "Active Meditation Breaks", difficulty: "Easy", time: "Immediate", description: "Use meditation apps (Headspace, Calm) for proper breaks when you struggle to rest."},
+    {category: "Wellness & Mental Health", issue: "Emotional Processing", name: "Journaling as Therapy", difficulty: "Easy", time: "Ongoing", description: "Write in journal to defuse emotional patterns and process feelings affecting productivity."},
+    {category: "Wellness & Mental Health", issue: "Self-Compassion", name: "Release Shame", difficulty: "Hard", time: "Ongoing", description: "Stop shaming yourself; ADHD difficulty is as real as physical disability (brain-based)."},
+    {category: "Wellness & Mental Health", issue: "Goal Setting", name: "Flexible Goal Setting", difficulty: "Easy", time: "1 day", description: "Set flexible targets (sleep 10PM±1hr, practice 5 days±1) instead of rigid goals."},
+    {category: "Wellness & Mental Health", issue: "Emotional Regulation", name: "Catastrophe Prevention", difficulty: "Easy", time: "Ongoing", description: "Remind yourself a few delayed things is manageable; don't catastrophize."},
+    {category: "Wellness & Mental Health", issue: "Self-Talk", name: "Positive Self-Talk & Journaling", difficulty: "Easy", time: "Ongoing", description: "Keep journal for supportive self-talk as if talking to a good friend."},
+    {category: "Wellness & Mental Health", issue: "Motivation", name: "Remember Your 'Why'", difficulty: "Easy", time: "1 day", description: "Write down why goals matter to your life; review when unmotivated."},
+    {category: "Wellness & Mental Health", issue: "Accomplishment", name: "Finch App for Habits", difficulty: "Easy", time: "1 day", description: "Use Finch app to get dopamine boosts for completing difficult tasks with cute pet."},
+    {category: "Wellness & Mental Health", issue: "Distraction Management", name: "Avoid Dopamine Mismatch", difficulty: "Easy", time: "Ongoing", description: "Don't watch TV/YouTube until essential tasks done or unrealistic dopamine expectations set."},
+
+    // Social & Conversation (4)
+    {category: "Social & Conversation", issue: "Interrupting", name: "Crossing Fingers for Interruption Pause", difficulty: "Easy", time: "Immediate", description: "Cross fingers to remind yourself not to interrupt while other person speaking."},
+    {category: "Social & Conversation", issue: "Group Conversation", name: "Hook System for Adding Points", difficulty: "Easy", time: "Immediate", description: "In group chat, stick out curled finger to indicate 'hook' (item to add); speak in order."},
+    {category: "Social & Conversation", issue: "Conversation", name: "Prepare Conversation Topics", difficulty: "Easy", time: "1 day", description: "Write down conversation topics/hooks on paper to remember and share ideas later."},
+    {category: "Social & Conversation", issue: "Task Discussion", name: "Task Transition Pretend Advice", difficulty: "Easy", time: "Immediate", description: "Mentally detach by pretending you're giving advice to friend struggling with transition."},
+
+    // Unconventional & Weird Hacks (13)
+    {category: "Unconventional & Weird Hacks", issue: "Automatic Behavior", name: "Turn Off Brain Mode", difficulty: "Hard", time: "Ongoing", description: "Stop thinking about tasks and let automatic behavior take over while noticing."},
+    {category: "Unconventional & Weird Hacks", issue: "Accountability", name: "Gamification with Pets", difficulty: "Easy", time: "Ongoing", description: "Use pets as accountability (showing excitement when you complete tasks)."},
+    {category: "Unconventional & Weird Hacks", issue: "Motivation", name: "Gamify Tasks", difficulty: "Medium", time: "Ongoing", description: "Turn tasks into games with rewards, point systems, or competition elements."},
+    {category: "Unconventional & Weird Hacks", issue: "Energy Alignment", name: "Work During Energy Bursts", difficulty: "Medium", time: "Ongoing", description: "When random bursts of energy come, direct to selected projects only (no new projects)."},
+    {category: "Unconventional & Weird Hacks", issue: "Focus", name: "Lofi Music & Noise Blocking Headphones", difficulty: "Easy", time: "Immediate", description: "Use lofi music or noise-blocking headphones to create focus environment."},
+    {category: "Unconventional & Weird Hacks", issue: "Habit Tracking", name: "Visual Check Sheet System", difficulty: "Easy", time: "1 day", description: "Create daily check sheet for habits (brush teeth, on time, dishes); check off daily."},
+    {category: "Unconventional & Weird Hacks", issue: "Accountability", name: "Reward After Tasks", difficulty: "Easy", time: "Ongoing", description: "Incorporate rewards INTO tasks (watch favorite show before AND after laundry)."},
+    {category: "Unconventional & Weird Hacks", issue: "Environment", name: "Break Traditional Organization Rules", difficulty: "Easy", time: "Immediate", description: "Stop following standard (hamper in bathroom, closed cabinets, dark alarms)."},
+    {category: "Unconventional & Weird Hacks", issue: "External Support", name: "Ask for Accountability", difficulty: "Medium", time: "Ongoing", description: "Find accountability buddy to check in with regularly for progress."},
+    {category: "Unconventional & Weird Hacks", issue: "External Support", name: "Work Accountability Group (12 Week Tribe)", difficulty: "Medium", time: "1 time", description: "Join 12 Week Tribe or similar groups for external accountability and support."},
+    {category: "Unconventional & Weird Hacks", issue: "Sleep", name: "Sleep Before Study/Test", difficulty: "Easy", time: "Ongoing", description: "Sleep night before exam rather than cramming; quality sleep>cramming."},
+    {category: "Unconventional & Weird Hacks", issue: "Support System", name: "Get Dog as Motivation", difficulty: "Hard", time: "Commitment", description: "Having a dog to care for creates routine and external accountability."},
+    {category: "Unconventional & Weird Hacks", issue: "Support System", name: "Accountability Partner Check-in", difficulty: "Easy", time: "Ongoing", description: "Regular check-ins with accountability partner for motivation."},
+
+    // Structure & Planning (11)
+    {category: "Structure & Planning", issue: "Planning", name: "Weekly Planning Session", difficulty: "Medium", time: "1-2 hours/week", description: "Dedicate time each week to plan projects and organize tasks for upcoming week."},
+    {category: "Structure & Planning", issue: "Organization System", name: "PARA System", difficulty: "Medium", time: "1-2 weeks", description: "Sort notes/files into Projects, Areas, Resources, Archives for easy retrieval."},
+    {category: "Structure & Planning", issue: "Task Management", name: "Bullet Journal Method", difficulty: "Medium", time: "1 week", description: "Use bullet journal combining traditional system with GTD (Getting Things Done) principles."},
+    {category: "Structure & Planning", issue: "Consistent Routine", name: "Establish Fixed Routines", difficulty: "Medium", time: "2-4 weeks", description: "Do same thing same time daily (lunch, wake time) to rely on structure instead of memory."},
+    {category: "Structure & Planning", issue: "Priority System", name: "Natural Rhythm Assessment", difficulty: "Medium", time: "1-2 weeks", description: "Track energy levels to identify peak productivity times and schedule important tasks then."},
+    {category: "Structure & Planning", issue: "Collaboration", name: "Coworking with Friends", difficulty: "Medium", time: "Ongoing", description: "Work alongside other people (in-person or virtual) on your respective projects."},
+    {category: "Structure & Planning", issue: "Task Assignment", name: "Ask for Explicit Deadlines", difficulty: "Easy", time: "Ongoing", description: "Always ask 'When do you need this by?' for any assigned task to create accountability."},
+    {category: "Structure & Planning", issue: "Clean Workspace", name: "Maintain Clean Workspace", difficulty: "Easy", time: "Daily", description: "Keep workspace tidy and free of visual clutter to reduce distractions."},
+    {category: "Structure & Planning", issue: "Task Intake", name: "Brain Dump Task Holding Tank", difficulty: "Easy", time: "Immediate", description: "Create holding tank/inbox for all tasks to dump, then organize daily."},
+    {category: "Structure & Planning", issue: "Daily Limit", name: "Start with 3 Priority Tasks", difficulty: "Easy", time: "Daily", description: "Add only top 3 must-do items each day to task management app to avoid overwhelm."},
+    {category: "Structure & Planning", issue: "Daily Review", name: "Calendar & List Daily Check", difficulty: "Easy", time: "Daily", description: "Review calendar and to-do list EVERY day without fail (acknowledge you'll miss days)."}
+  ];
+
+  const categoryIcons = {
+    "Task Management & Productivity": "✓",
+    "Finding & Organizing Items": "🔍",
+    "Household Chores & Cleaning": "🧹",
+    "Morning & Sleep Routines": "🌅",
+    "Medication & Health": "💊",
+    "Work & Study": "💼",
+    "Wellness & Mental Health": "🧘",
+    "Social & Conversation": "💬",
+    "Unconventional & Weird Hacks": "⭐",
+    "Structure & Planning": "📊"
+  };
+
+  const state = {
+    search: "",
+    category: "all",
+    issue: "all",
+    difficulty: "all",
+    sort: "none"
+  };
+
+  function initFilters() {
+    const categoryFilter = document.getElementById("categoryFilter");
+    const issueFilter = document.getElementById("issueFilter");
+
+    const categories = [...new Set(hacks.map(h => h.category))].sort();
+    const issues = [...new Set(hacks.map(h => h.issue))].sort((a,b) => a.localeCompare(b));
+
+    categories.forEach(cat => {
+      const opt = document.createElement("option");
+      opt.value = cat;
+      opt.textContent = cat;
+      categoryFilter.appendChild(opt);
+    });
+
+    issues.forEach(issue => {
+      const opt = document.createElement("option");
+      opt.value = issue;
+      opt.textContent = issue;
+      issueFilter.appendChild(opt);
+    });
+  }
+
+  function applyFiltersAndSort() {
+    let filtered = hacks.filter(h => {
+      if (state.category !== "all" && h.category !== state.category) return false;
+      if (state.issue !== "all" && h.issue !== state.issue) return false;
+      if (state.difficulty !== "all" && h.difficulty !== state.difficulty) return false;
+
+      if (state.search.trim()) {
+        const q = state.search.toLowerCase();
+        const blob = (h.name + " " + h.issue + " " + h.description).toLowerCase();
+        if (!blob.includes(q)) return false;
+      }
+      return true;
+    });
+
+    if (state.sort === "issue-asc" || state.sort === "issue-desc") {
+      filtered.sort((a,b) => a.issue.localeCompare(b.issue));
+      if (state.sort === "issue-desc") filtered.reverse();
+    } else if (state.sort === "difficulty") {
+      const order = { "Easy": 0, "Medium": 1, "Hard": 2 };
+      filtered.sort((a,b) => (order[a.difficulty] ?? 99) - (order[b.difficulty] ?? 99));
+    } else if (state.sort === "time") {
+      const rank = t => {
+        const map = {
+          "Immediate": 0,
+          "Daily": 1,
+          "1 day": 2,
+          "2 days": 3,
+          "1 week": 4,
+          "1-2 days": 5,
+          "1-2 hours/week": 6,
+          "Weekly": 7,
+          "1-2 weeks": 8,
+          "2-3 days": 9,
+          "2 weeks": 10,
+          "2-4 weeks": 11,
+          "1 time": 12,
+          "As needed": 13,
+          "Ongoing": 14,
+          "Commitment": 15,
+          "Daily planning": 16
+        };
+        return map[t] ?? 99;
+      };
+      filtered.sort((a,b) => rank(a.time) - rank(b.time));
+    } else if (state.sort === "name") {
+      filtered.sort((a,b) => a.name.localeCompare(b.name));
+    }
+
+    return filtered;
+  }
+
+  function render() {
+    const categoriesContainer = document.getElementById("categoriesContainer");
+    categoriesContainer.innerHTML = "";
+
+    const filtered = applyFiltersAndSort();
+
+    const summaryBar = document.getElementById("summaryBar");
+    const catSet = new Set(filtered.map(h => h.category));
+    summaryBar.innerHTML = `Showing <strong>${filtered.length}</strong> hacks across <strong>${catSet.size}</strong> categories.`;
+
+    const byCat = {};
+    filtered.forEach(h => {
+      if (!byCat[h.category]) byCat[h.category] = [];
+      byCat[h.category].push(h);
+    });
+
+    const allCats = [...new Set(hacks.map(h => h.category))];
+    allCats.forEach(catName => {
+      const hacksInCat = byCat[catName] || [];
+      if (!hacksInCat.length) return;
+
+      const details = document.createElement("details");
+      details.className = "category";
+      details.open = true;
+
+      const summary = document.createElement("summary");
+      summary.className = "category-header";
+
+      const left = document.createElement("div");
+      left.className = "category-title-left";
+      const iconSpan = document.createElement("span");
+      iconSpan.className = "cat-icon";
+      iconSpan.textContent = categoryIcons[catName] || "•";
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "cat-name";
+      nameSpan.textContent = catName;
+      const countSpan = document.createElement("span");
+      countSpan.className = "cat-count";
+      countSpan.textContent = `${hacksInCat.length} hack${hacksInCat.length !== 1 ? "s" : ""}`;
+      left.appendChild(iconSpan);
+      left.appendChild(nameSpan);
+      left.appendChild(countSpan);
+
+      const right = document.createElement("div");
+      right.className = "cat-actions";
+
+      const sortLabel = document.createElement("span");
+      sortLabel.textContent = "Sort:";
+      sortLabel.style.opacity = "0.7";
+
+      const sortIssue = document.createElement("span");
+      sortIssue.className = "cat-toggle";
+      sortIssue.textContent = "Issue";
+      sortIssue.title = "Click to sort by issue";
+
+      const sortDiff = document.createElement("span");
+      sortDiff.className = "cat-toggle";
+      sortDiff.textContent = "Difficulty";
+      sortDiff.title = "Click to sort by difficulty";
+
+      const sortTime = document.createElement("span");
+      sortTime.className = "cat-toggle";
+      sortTime.textContent = "Time";
+      sortTime.title = "Click to sort by time to implement";
+
+      function applySortHighlight() {
+        [sortIssue, sortDiff, sortTime].forEach(el => {
+          el.style.fontWeight = "400";
+          el.style.textDecoration = "none";
+        });
+        if (state.sort === "issue-asc" || state.sort === "issue-desc") {
+          sortIssue.style.fontWeight = "700";
+          sortIssue.style.textDecoration = "underline";
+        } else if (state.sort === "difficulty") {
+          sortDiff.style.fontWeight = "700";
+          sortDiff.style.textDecoration = "underline";
+        } else if (state.sort === "time") {
+          sortTime.style.fontWeight = "700";
+          sortTime.style.textDecoration = "underline";
+        }
+      }
+      applySortHighlight();
+
+      sortIssue.addEventListener("click", () => {
+        if (state.sort === "issue-asc") {
+          state.sort = "issue-desc";
+        } else {
+          state.sort = "issue-asc";
+        }
+        document.getElementById("sortSelect").value = state.sort;
+        render();
+      });
+
+      sortDiff.addEventListener("click", () => {
+        state.sort = "difficulty";
+        document.getElementById("sortSelect").value = state.sort;
+        render();
+      });
+
+      sortTime.addEventListener("click", () => {
+        state.sort = "time";
+        document.getElementById("sortSelect").value = state.sort;
+        render();
+      });
+
+      right.appendChild(sortLabel);
+      right.appendChild(sortIssue);
+      right.appendChild(sortDiff);
+      right.appendChild(sortTime);
+
+      summary.appendChild(left);
+      summary.appendChild(right);
+      details.appendChild(summary);
+
+      const grid = document.createElement("div");
+      grid.className = "hacks-grid";
+
+      hacksInCat.forEach(h => {
+        const card = document.createElement("div");
+        card.className = "hack-card";
+        const name = document.createElement("div");
+        name.className = "hack-name";
+        name.textContent = h.name;
+        const issue = document.createElement("div");
+        issue.className = "hack-issue";
+        issue.textContent = `Issue: ${h.issue}`;
+        const desc = document.createElement("div");
+        desc.className = "hack-description";
+        desc.textContent = h.description;
+        const meta = document.createElement("div");
+        meta.className = "hack-meta";
+        const diff = document.createElement("span");
+        diff.className = "badge " + h.difficulty.toLowerCase();
+        diff.textContent = h.difficulty;
+        const time = document.createElement("span");
+        time.className = "time-badge";
+        time.textContent = h.time;
+        meta.appendChild(diff);
+        meta.appendChild(time);
+        card.appendChild(name);
+        card.appendChild(issue);
+        card.appendChild(desc);
+        card.appendChild(meta);
+        grid.appendChild(card);
+      });
+
+      details.appendChild(grid);
+      categoriesContainer.appendChild(details);
+    });
+  }
+
+  function bindEvents() {
+    const searchInput      = document.getElementById("searchInput");
+    const categoryFilter   = document.getElementById("categoryFilter");
+    const issueFilter      = document.getElementById("issueFilter");
+    const difficultyFilter = document.getElementById("difficultyFilter");
+    const sortSelect       = document.getElementById("sortSelect");
+    const pillExpandAll    = document.getElementById("pill-expand-all");
+    const pillCollapseAll  = document.getElementById("pill-collapse-all");
+
+    searchInput.addEventListener("input", e => {
+      state.search = e.target.value;
+      render();
+    });
+    categoryFilter.addEventListener("change", e => {
+      state.category = e.target.value;
+      render();
+    });
+    issueFilter.addEventListener("change", e => {
+      state.issue = e.target.value;
+      render();
+    });
+    difficultyFilter.addEventListener("change", e => {
+      state.difficulty = e.target.value;
+      render();
+    });
+    sortSelect.addEventListener("change", e => {
+      state.sort = e.target.value;
+      render();
+    });
+
+    pillExpandAll.addEventListener("click", () => {
+      pillExpandAll.classList.add("active");
+      pillCollapseAll.classList.remove("active");
+      document.querySelectorAll("details.category").forEach(d => d.open = true);
+    });
+    pillCollapseAll.addEventListener("click", () => {
+      pillCollapseAll.classList.add("active");
+      pillExpandAll.classList.remove("active");
+      document.querySelectorAll("details.category").forEach(d => d.open = false);
+    });
+  }
+
+  initFilters();
+  bindEvents();
+  render();
+</script>
+</body>
+</html>
